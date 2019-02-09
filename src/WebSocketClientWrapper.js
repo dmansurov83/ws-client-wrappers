@@ -68,10 +68,10 @@ export default class WebSocketClientWrapper extends EventEmitter {
     }
 
     filter(predicate) {
-        return WebSocketFilteredClient(this, predicate);
+        return new WebSocketFilteredClient(this, predicate);
     }
 
     jsonify() {
-        return WebSocketJsonClient(this);
+        return new WebSocketJsonClient(this);
     }
 }
