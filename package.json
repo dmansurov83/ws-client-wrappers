@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf lib",
-    "compile": "babel src --loose --out-dir lib",
+    "compile": "yarn clean && babel src --loose --out-dir lib",
     "prepublish": "yarn clean && yarn compile"
   },
   "devDependencies": {

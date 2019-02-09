@@ -1,13 +1,11 @@
 import {EventEmitter} from 'events';
-import WebSocketFilteredClient from "./WebSocketFilteredClient";
-import WebSocketJsonClient from "./WebSocketJsonClient";
 
 const WebSocketClientState = {
     disconnected: 'disconnected',
     connected: 'connected',
 };
 
-export default class WebSocketClientWrapper extends EventEmitter {
+export class WebSocketClientWrapper extends EventEmitter {
     state = WebSocketClientState.disconnected;
 
     constructor(ws) {
@@ -73,5 +71,29 @@ export default class WebSocketClientWrapper extends EventEmitter {
 
     jsonify() {
         return new WebSocketJsonClient(this);
+    }
+}
+
+export class WebSocketFilteredClient extends WebSocketClientWrapper {
+    constructor(ws, predicate = () => true) {
+        super(ws);
+        this.predicate = predicate;
+    }
+
+    _handleMessage(event, flags) {
+        if (this.predicate(event, flags)) {
+            super._handleMessage(event, flags);
+        }
+    }
+}
+
+export class WebSocketJsonClient extends WebSocketClientWrapper {
+    _handleMessage(event, flags) {
+        this.emit('data', JSON.parse(event.data));
+        super._handleMessage(event, flags);
+    }
+
+    write(json) {
+        super.send(JSON.stringify(json));
     }
 }

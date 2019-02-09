@@ -1,6 +1,5 @@
 import {EventEmitter} from 'events';
-import WebSocketFilteredClient from "./WebSocketFilteredClient";
-import WebSocketJsonClient from "./WebSocketJsonClient";
+import {WebSocketFilteredClient, WebSocketJsonClient} from './WebSocketClientWrapper';
 
 export default class WebSocketClient extends EventEmitter {
     constructor({autoReconnectInterval = 1000, auth} = {}) {
@@ -34,11 +33,11 @@ export default class WebSocketClient extends EventEmitter {
 
     _handleClose = (e) => {
         switch (e.code) {
-            case 1000: // CLOSE_NORMAL
-                break;
-            default: // Abnormal closure
-                this.reconnect(e);
-                break;
+        case 1000: // CLOSE_NORMAL
+            break;
+        default: // Abnormal closure
+            this.reconnect(e);
+            break;
         }
         this.onclose(e);
         this.emit('close', e);
@@ -46,13 +45,13 @@ export default class WebSocketClient extends EventEmitter {
 
     _handleError = (e) => {
         switch (e.code) {
-            case 'ECONNREFUSED':
-                this.reconnect(e);
-                break;
-            default:
-                this.onerror(e);
-                this.emit('error', e);
-                break;
+        case 'ECONNREFUSED':
+            this.reconnect(e);
+            break;
+        default:
+            this.onerror(e);
+            this.emit('error', e);
+            break;
         }
     };
 
