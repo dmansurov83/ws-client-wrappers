@@ -6,7 +6,13 @@ const WebSocketClientState = {
 };
 
 export class WebSocketClientWrapper extends EventEmitter {
-    state = WebSocketClientState.disconnected;
+    get state(){
+        return this.ws.readyState === 1 ? WebSocketClientState.connected : WebSocketClientState.disconnected;
+    }
+
+    get readyState(){
+        return this.ws.readyState;
+    }
 
     constructor(ws) {
         super();
@@ -25,7 +31,6 @@ export class WebSocketClientWrapper extends EventEmitter {
     }
 
     _handleOpen(e) {
-        this.state = WebSocketClientState.connected;
         this.onopen(e);
         this.emit('open', e);
 
@@ -44,7 +49,6 @@ export class WebSocketClientWrapper extends EventEmitter {
     }
 
     _handleClose(e) {
-        this.state = WebSocketClientState.disconnected;
         this.onclose(e);
         this.emit('close', e);
     }

@@ -1,6 +1,6 @@
 {
   "name": "ws-client-wrappers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reconnect, Filter & Jsonify websocket client wrappers",
   "main": "lib/index.js",
   "license": "MIT",
